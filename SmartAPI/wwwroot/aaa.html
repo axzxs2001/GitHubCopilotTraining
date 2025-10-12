@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <input type="button" value="测试"  onclick="abc()"/>
+    <script src="js/signalr.js"></script>
+    <script>
+        function abc() {
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("/SmartAPI/chatHub")
+                .withAutomaticReconnect()
+                .configureLogging(signalR.LogLevel.Information)
+                .build();
+            async function start() {
+                try {
+                    await connection.start();
+                } catch (err) {
+                    setTimeout(start, 5000);
+                }
+            };
+
+            connection.onclose(async () => {
+                document.getElementById("qrcode").innerHTML = "";
+                await start();
+            });
+            connection.on("ReceiveMessage", (message) => {
+                streamAsk(message);
+                document.getElementById("qrmessage").innerHTML = handleError(-31, lan);
+            });
+            start();
+        }
+    </script>
+</body>
+</html>

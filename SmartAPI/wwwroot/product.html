@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>产品API</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script defer src="js/alpine.js"></script>
+    <script src="js/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* 图标的样式 */
+        .floating-icon {
+            position: fixed; /* 固定在视口的特定位置 */
+            top: 20px; /* 距离视口顶部 20px */
+            right: 20px; /* 距离视口右侧 20px */
+            width: 50px; /* 图标的宽度 */
+            height: 50px; /* 图标的高度 */
+            background-color: #4CAF50; /* 背景色 */
+            border-radius: 50%; /* 圆形外观 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 阴影效果 */
+            z-index: 1000; /* 确保图标在所有内容之上 */
+        }
+
+            /* 悬停时改变样式 */
+            .floating-icon:hover {
+                background-color: #45a049;
+            }
+    </style>
+</head>
+<body>
+    <div class="floating-icon" onclick="window.open('/chat.html')">
+        <i class="fa-regular fa-comment-dots"></i>
+    </div>
+
+    <div class="container" x-data="querydata()">
+        <div class="row">
+
+            <template x-for="product in Products">
+
+                <div class="card" style="width: 18rem;margin:5px;padding:0px">
+                    <img x-bind:src="product.image" class="card-img-top" alt="...">
+                    <div class="card-body" style="background-color:#f5f5f5">
+                        <h5 class="card-title" " x-text="product.name"></h5>
+                        <p class="card-text" x-text="product.describe.substring(0,50)+'……'"></p>
+                        <div style="text-align:right;">
+                            <a x-bind:href="'api.html?productid='+product.id" target="_blank" class="btn btn-primary btn-sm">查看</a>
+                        </div>
+
+                    </div>
+                </div>
+            </template>
+
+        </div>
+    </div>
+    <script>
+        function querydata() {
+            return {
+                Products: [],
+
+                init() {
+                    that = this
+                    axios.get("/smartapi/products", {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                        .then(response => {
+                            if (response.data != null) {
+                                console.log(response.data.data)
+                                that.Products = response.data.data
+                            } else {
+                                console.log("/products is error")
+                            }
+                        })
+                        .catch(error => {
+                            console.error('请求失败:', error);
+                        });
+                },
+                showContent(content) {
+
+                },
+
+            }
+        }
+    </script>
+</body>
+</html>

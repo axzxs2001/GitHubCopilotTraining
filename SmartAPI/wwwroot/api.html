@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>API文档</title>
+    <!-- 引入 Markdown-it 和 Mermaid -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/13.0.2/markdown-it.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.4.0/dist/mermaid.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link href="js/bootstrap-treeview.min.css" rel="stylesheet" />
+    <script src="js/bootstrap-treeview.min.js"></script>
+    <script defer src="js/alpine.js"></script>
+    <script src="js/axios.min.js"></script>
+    <style>
+        /* 自定义样式：黑底白字的代码块 */
+        pre {
+            padding: 10px;
+            background-color: #1e1e1e; /* 黑色背景 */
+            color: #ffffff; /* 白色字体 */
+        }
+
+            pre code {
+                background-color: #1e1e1e; /* 黑色背景 */
+                color: #ffffff; /* 白色字体 */
+            }
+
+        .mermaid {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .row {
+            padding: 10px;
+            margin-top: 10px
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        /* Basic table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* Table headers */
+        th {
+            background-color: #f4f4f4;
+            color: #333;
+            font-weight: bold;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #ddd;
+        }
+
+        /* Table data cells */
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Alternating row colors */
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        /* Hover effect on rows */
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Responsive table for smaller screens */
+        @media screen and (max-width: 768px) {
+            table, th, td {
+                display: block;
+            }
+
+            tr {
+                margin-bottom: 10px;
+                border-bottom: 2px solid #ddd;
+            }
+
+            th, td {
+                text-align: left;
+                padding: 10px;
+            }
+        }
+        /* 图标的样式 */
+        .floating-icon {
+            position: fixed; /* 固定在视口的特定位置 */
+            top: 20px; /* 距离视口顶部 20px */
+            right: 20px; /* 距离视口右侧 20px */
+            width: 50px; /* 图标的宽度 */
+            height: 50px; /* 图标的高度 */
+            background-color: #4CAF50; /* 背景色 */
+            border-radius: 50%; /* 圆形外观 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 阴影效果 */
+            z-index: 1000; /* 确保图标在所有内容之上 */
+        }
+
+            /* 悬停时改变样式 */
+            .floating-icon:hover {
+                background-color: #45a049;
+            }
+    </style>
+</head>
+<body x-data="querydata()">
+    <div class="floating-icon" onclick="window.open('/chat.html')">
+        <i class="fa-regular fa-comment-dots"></i>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-2">
+                <div id="tree"></div>
+            </div>
+            <div class="col-10" id="contents">
+            </div>
+        </div>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        // 初始化 Mermaid
+        mermaid.initialize({ startOnLoad: false });
+        // 创建自定义 Mermaid 渲染规则
+        function markdownItMermaid(md) {
+            const defaultFence = md.renderer.rules.fence || function (tokens, idx, options, env, self) {
+                return self.renderToken(tokens, idx, options);
+            };
+            md.renderer.rules.fence = function (tokens, idx, options, env, self) {
+                const token = tokens[idx];
+                if (token.info === 'mermaid') {
+                    return `<div class="mermaid">${token.content}</div>`;
+                }
+                return defaultFence(tokens, idx, options, env, self);
+            };
+        }
+        const md = window.markdownit();
+        md.use(markdownItMermaid);
+
+
+        function querydata() {
+            return {
+                //请求单
+                Product: {},
+                APIDatas: [],
+                //初始化方法
+                init() {
+                    // 获取当前页面的 URL
+                    const url = window.location.href;
+                    // 创建 URL 对象
+                    const urlObj = new URL(url);
+                    // 获取 URL 参数
+                    const productId = urlObj.searchParams.get("productid");
+                    that = this
+                    ///按类型获取产品类
+                    axios.get("/smartapi/apidatas/" + productId, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                        .then(response => {
+                            if (response.data != null) {
+                                console.log(response.data.data)
+                                that.APIDatas = response.data.data.apis;
+                                that.Product = response.data.data.product;
+                                that.showContent('![产品图片](' + that.Product.image + ' "产品图片")')
+                                that.loadTree(that.APIDatas)
+                            } else {
+                                console.log("/querysheet is error")
+                            }
+
+                        })
+                        .catch(error => {
+                            console.error('请求失败:', error); // 处理错误
+                        });
+                },
+                showContent(content) {
+                    const htmlContent = md.render(content);
+                    document.getElementById('contents').innerHTML = htmlContent;
+                    mermaid.init();
+                },
+                loadTree(data) {
+
+                    const buildTree = (parentId) => {
+                        // 找到所有的子节点
+                        return data
+                            .filter(item => item.parentID === parentId)
+                            .map(item => ({
+                                id: item.id,
+                                icon: "glyphicon glyphicon-stop",
+                                selectedIcon: "glyphicon glyphicon-stop",
+                                text: item.name,
+                                nodes: buildTree(item.id) // 递归获取子节点
+                            }));
+                    };
+                    that = this
+                    const tree = buildTree(0); // 从根节点（parentID 为 0）开始构建树
+                    $('#tree').treeview(
+                        {
+                            data: tree,
+                            levels: 3,
+                            expandIcon: 'fa fa-angle-down fa-fw',
+                            collapseIcon: 'fa fa-angle-right fa-fw',
+                            onNodeSelected: function (event, mydata) {
+                                that.APIDatas.forEach(item => {
+                                    if (item.id == mydata.id && item.content != null) {
+                                        that.showContent(item.content)
+                                    }
+                                })
+                            }
+                        });
+                }
+            }
+        }
+
+
+    </script>
+</body>
+</html>

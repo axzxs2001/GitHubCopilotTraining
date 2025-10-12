@@ -1,0 +1,6 @@
+@SmartAPI_HostAddress = http://localhost:5270
+
+GET {{SmartAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
