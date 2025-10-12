@@ -1,0 +1,4 @@
+1、请分析图片，提取数据库表，生成建请语句的sql，同时在postgre的数据库TokyoAI中创建这些表
+2、同时在项目AgentModeDemo中创建对应的Repository层（ORM用Dapper），Service层，在Program.cs中添加对应的路由映射方法，并且用#region块作注释区分
+3、创建wwwroot，添加管理和展示页面，前端框架用bootstrap和aline.js，完成对路由映射方法的调用
+4、仔细检查整个链路，确定高质量完成编码
