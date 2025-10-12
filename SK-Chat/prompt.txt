@@ -1,0 +1,2 @@
+添加一个流式的路由映射方法，命名为streamchat
+生成一个chat.html，布局是聊天输入窗口和历史窗口，对接streamchat api
