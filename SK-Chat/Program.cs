@@ -4,6 +4,7 @@ using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.TextToImage;
 using Microsoft.SemanticKernel.TextToAudio;
 using Microsoft.SemanticKernel.AudioToText;
+using Microsoft.SemanticKernel.Connectors.Google;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,10 @@ app.MapPost("/chat", async (PromptMessage chatPrompt) =>
     kernelBuilder.AddAzureOpenAIChatCompletion(
         deploymentName: deploymentName,
         endpoint: endpoint,
-        apiKey: key);    
+        apiKey: key)
+        // .AddOpenAIChatCompletion(apiKey: key, modelId: "gpt-3.5-turbo")
+        // .AddGoogleAIGeminiChatCompletion(modelId:"gemini-1", apiKey: key)       
+        ;
     var kernel = kernelBuilder.Build();
     var chatHistory = new ChatHistory("你是一个乐于助人的助手。");
     chatHistory.AddUserMessage(chatPrompt.Input);
