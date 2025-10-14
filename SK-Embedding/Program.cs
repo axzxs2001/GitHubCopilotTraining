@@ -22,16 +22,9 @@ var embeddingGenerator = kernel.GetRequiredService<ITextEmbeddingGenerationServi
 string[] documents = new[]
 {
     "苹果",
-    "香蕉",
-    "橙子",
-    "葡萄",
-    "西瓜",
-    "草莓",
-    "西红柿",
-    "黄瓜",
-    "胡萝卜",
     "土豆",
-    "苹果手机"
+    "apple",
+    "苹果手表"
 };
 
 var vectorStore = new Dictionary<string, ReadOnlyMemory<float>>();
@@ -40,9 +33,10 @@ foreach (var doc in documents)
     var embedding = await embeddingGenerator.GenerateEmbeddingAsync(doc);
     vectorStore[doc] = embedding;
 }
-
+Console.WriteLine("向量的维度：" + vectorStore.First().Value.Length);
 await QueryAsync("水果",embeddingGenerator, vectorStore);
-await QueryAsync("蔬菜", embeddingGenerator,vectorStore);
+//await QueryAsync("蔬菜", embeddingGenerator, vectorStore);
+//await QueryAsync("电子设备", embeddingGenerator,vectorStore);
 // 搜索查询
 static async Task QueryAsync(string query,ITextEmbeddingGenerationService embeddingGenerator,Dictionary<string, ReadOnlyMemory<float>> vectorStore)
 {
