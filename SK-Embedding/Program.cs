@@ -35,8 +35,8 @@ foreach (var doc in documents)
 }
 Console.WriteLine("向量的维度：" + vectorStore.First().Value.Length);
 await QueryAsync("水果",embeddingGenerator, vectorStore);
-//await QueryAsync("蔬菜", embeddingGenerator, vectorStore);
-//await QueryAsync("电子设备", embeddingGenerator,vectorStore);
+await QueryAsync("蔬菜", embeddingGenerator, vectorStore);
+await QueryAsync("电子设备", embeddingGenerator,vectorStore);
 // 搜索查询
 static async Task QueryAsync(string query,ITextEmbeddingGenerationService embeddingGenerator,Dictionary<string, ReadOnlyMemory<float>> vectorStore)
 {
