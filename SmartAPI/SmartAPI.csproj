@@ -7,25 +7,25 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CNSSDK" Version="1.0.6" />
+    <PackageReference Include="CNSSDK" Version="1.1.0" />
     <PackageReference Include="Dapper" Version="2.1.66" />
-    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
     <PackageReference Include="Google.Cloud.Functions.V2" Version="1.7.0" />
-    <PackageReference Include="Google.Cloud.Run.V2" Version="2.13.0" />
-    <PackageReference Include="Google.Cloud.Storage.V1" Version="4.11.0" />
-    <PackageReference Include="Microsoft.Extensions.AI" Version="9.3.0-preview.1.25161.3" />
-    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="9.3.0-preview.1.25161.3" />
-    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.2" />
-    <PackageReference Include="Microsoft.Extensions.VectorData.Abstractions" Version="9.0.0-preview.1.25161.1" /> 
-    <PackageReference Include="Microsoft.SemanticKernel" Version="1.44.0" /> 
-    <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.44.0-preview" /> 
-    <PackageReference Include="Microsoft.SemanticKernel.Agents.OpenAI" Version="1.44.0-preview" /> 
-    <PackageReference Include="Microsoft.SemanticKernel.Connectors.Amazon" Version="1.44.0-alpha" /> 
-    <PackageReference Include="Microsoft.SemanticKernel.Connectors.Google" Version="1.44.0-alpha" />
-    <PackageReference Include="Microsoft.SemanticKernel.Connectors.Redis" Version="1.44.0-preview" />
-    <PackageReference Include="MySql.Data" Version="9.2.0" />
+    <PackageReference Include="Google.Cloud.Run.V2" Version="2.16.0" />
+    <PackageReference Include="Google.Cloud.Storage.V1" Version="4.13.0" />
+    <PackageReference Include="Microsoft.Extensions.AI" Version="9.10.0" />
+    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" Version="9.10.0-preview.1.25513.3" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.10" />
+    <PackageReference Include="Microsoft.Extensions.VectorData.Abstractions" Version="9.7.0" /> 
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.66.0" /> 
+    <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.66.0" /> 
+    <PackageReference Include="Microsoft.SemanticKernel.Agents.OpenAI" Version="1.66.0-preview" /> 
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.Amazon" Version="1.66.0-alpha" /> 
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.Google" Version="1.66.0-alpha" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.Redis" Version="1.66.0-preview" />
+    <PackageReference Include="MySql.Data" Version="9.4.0" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
-    <PackageReference Include="StackExchange.Redis" Version="2.8.31" />
+    <PackageReference Include="StackExchange.Redis" Version="2.9.32" />
   </ItemGroup>
 
   <ItemGroup>

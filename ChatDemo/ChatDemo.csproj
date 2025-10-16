@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SemanticKernel.Connectors.Google" Version="1.66.0-alpha" />
-    <PackageReference Include="System.IO.Ports" Version="9.0.9" />
+    <PackageReference Include="System.IO.Ports" Version="9.0.10" />
   </ItemGroup>
 
 </Project>
