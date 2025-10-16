@@ -9,6 +9,7 @@ using just_agi_api.Services;
 
 namespace just_agi_api.Routing
 {
+    // todo: 增加日志
     public static class PromptRouting
     {
         public static void AddPrompt(this IServiceCollection services)
