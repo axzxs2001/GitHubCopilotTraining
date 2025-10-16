@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <!-- UIkit CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.19.2/dist/css/uikit.min.css" />
+
+    <!-- UIkit JS -->
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.19.2/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.19.2/dist/js/uikit-icons.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        .text {
+            line-height: 1.5em;
+            /*  max-height: 4.5em; line-height * 行数 */
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="uk-container">
+        <ul class="uk-comment-list uk-margin-top">
+            <li x-data="prompts">
+                <article class="uk-comment uk-visible-toggle" tabindex="-1" role="comment">
+                    <header class="uk-comment-header uk-position-relative">
+                        <div class="uk-grid-medium uk-flex-middle" uk-grid>
+                            <div class="uk-width-expand">
+                                <h4 class="uk-comment-title uk-margin-remove"><a class="uk-link-reset" href="#" x-html="data.prompt.name"></a></h4>
+                               
+
+                                <p class="uk-comment-meta uk-margin-remove-top">
+                                    <!--<a class="uk-link-reset" href="#" x-html="data.prompt.createTime"></a>-->
+                                    <span class="uk-comment-meta uk-margin-remove-top" x-text="data.prompt.createTime"></span> 
+                                    <span class="uk-comment-meta uk-margin-remove-top">标签：</span>
+                                    <template x-for="tag in data.prompt.tags">
+                                        <span class="uk-comment-meta uk-margin-remove-top" x-text="tag+'  '"></span>
+                                    </template>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="uk-position-top-right uk-position-small uk-hidden-hover"><a class="uk-link-muted" href="#">编辑</a></div>
+                    </header>
+                    <div class="uk-comment-body">
+
+                        <p id="text-container" class="text" x-effect="jjjj()" x-html="data.prompt.promptItems[0].prompt"></p>
+
+                        <a id="toggle-button" href="#" uk-icon="icon: chevron-down; ratio: 1.8"></a>
+                    </div>
+                </article>
+                <ul x-if="data.prompt.promptItems.Length>0" style="margin-top:20px;padding-left:30px">
+                    <template x-for="item in data.prompt.promptItems">
+                        <li style="margin-top:20px">
+                            <article class="uk-comment uk-comment-primary uk-visible-toggle" tabindex="-1" role="comment">
+                                <header class="uk-comment-header uk-position-relative">
+                                    <div class="uk-grid-medium uk-flex-middle" uk-grid>
+                                        <div class="uk-width-expand">
+                                            <p class="uk-comment-meta uk-margin-remove-top"><a class="uk-link-reset" href="#" x-html="item.createTime"></a></p>
+                                        </div>
+                                    </div>
+                                    <div class="uk-position-top-right uk-position-small uk-hidden-hover"><a class="uk-link-muted" href="#">编辑</a></div>
+                                </header>
+                                <div class="uk-comment-body">
+                                    <p x-html="item.prompt"></p>
+                                </div>
+                            </article>
+                        </li>
+                    </template>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <script>
+        document.getElementById("toggle-button").addEventListener("click", function () {
+            var textContainer = document.getElementById("text-container");
+            if (textContainer.style.maxHeight) {
+                textContainer.style.maxHeight = null;
+                this.setAttribute("uk-icon", "icon: chevron-down")
+            } else {
+                textContainer.style.maxHeight = textContainer.scrollHeight + "px";
+                this.setAttribute("uk-icon", "icon: chevron-up")
+            }
+        });
+
+
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('prompts', () => ({
+                data: {
+                    "prompt": {
+                        "id": 0,
+                        "tags": [],
+                        "name": "",
+                        "llmUrl": null,
+                        "enterpriseID": 0,
+                        "roleID": 0,
+                        "status": false,
+                        "valid": false,
+                        "createTime": null,
+                        "createUser": 0,
+                        "modifyTime": "",
+                        "modifyUser": 0,
+                        "promptItems": [
+                            {
+                                "id": 0,
+                                "version": null,
+                                "prompt": "",
+                                "promptID": 0,
+                                "valid": false,
+                                "createTime": "",
+                                "createUser": 0,
+                                "modifyTime": "",
+                                "modifyUser": 0
+                            }
+                        ],
+                        "customer": {
+                            "name": ""
+                        }
+                    },
+
+                },
+                init() {
+                    that = this
+                    axios.get('/prompt/1').then(function (response) {
+                        console.log(response.data)
+                        that.data.prompt = response.data
+                    }).catch(function (error) {
+                        console.error(error);
+                    });
+                },
+                jjjj() {
+                    var container = document.getElementById("text-container");
+                    //var text = container.querySelector('.text');
+                    var button = document.getElementById("toggle-button");
+                    console.log(this.data)
+                    // 检查文本的实际高度是否超过了其容器的最大高度
+                    //  if (container.scrollHeight <= container.offsetHeight) {
+                    if (container.offsetHeight <= 4.5) {
+                        // 如果没有超过，隐藏按钮
+                        button.style.display = "none";
+                    } else {
+                        // 如果超过了，显示按钮
+                        button.style.display = "inline-block";
+                    }
+                },
+
+            }))
+        })
+    </script>
+</body>
+</html>

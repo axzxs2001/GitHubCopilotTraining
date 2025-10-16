@@ -1,0 +1,6 @@
+@just_agi_api_HostAddress = http://localhost:5049
+
+GET {{just_agi_api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
