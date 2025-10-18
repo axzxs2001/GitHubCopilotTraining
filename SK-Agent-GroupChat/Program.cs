@@ -49,14 +49,14 @@ var orchestration =
     new GroupChatOrchestration(new RoundRobinGroupChatManager()
     {
         MaximumInvocationCount = 15,
-         //InteractiveCallback = () =>
-         //{
-         //    Console.WriteLine("请用户输入内容：");
-         //   var userContent = Console.ReadLine();
-         //   ChatMessageContent input = new(AuthorRole.User, userContent);
-         //   Console.WriteLine($"\n# INPUT: {input.Content}\n");
-         //   return ValueTask.FromResult(input);
-         //}
+        // InteractiveCallback = () =>
+        //  {
+        //     Console.WriteLine("请用户输入内容：");
+        //    var userContent = Console.ReadLine();
+        //    ChatMessageContent input = new(AuthorRole.User, userContent);
+        //    Console.WriteLine($"\n# INPUT: {input.Content}\n");
+        //    return ValueTask.FromResult(input);
+        //  }
     },
     writer,
     editor)
@@ -72,7 +72,7 @@ await runtime.StartAsync();
 string input = "为一款既实惠又好开的全新电动SUV创建一句广告标语。";
 Console.WriteLine($"\n# INPUT: {input}\n");
 OrchestrationResult<string> result = await orchestration.InvokeAsync(input, runtime);
-string text = await result.GetValueAsync(TimeSpan.FromSeconds(30 * 3));
+string text = await result.GetValueAsync(TimeSpan.FromSeconds(30 * 30));
 
 
 Console.WriteLine($"\n# RESULT: {text}");
@@ -106,6 +106,7 @@ sealed class OrchestrationMonitor
 
     public ValueTask ResponseCallback(Microsoft.SemanticKernel.ChatMessageContent response)
     {
+        Console.WriteLine($"\n# RESPONSE FROM {response.AuthorName}: {response.Content}\n");
         this.History.Add(response);
         return ValueTask.CompletedTask;
     }
