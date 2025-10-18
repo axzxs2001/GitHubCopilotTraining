@@ -14,5 +14,7 @@
     <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.66.0" />
     <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" Version="1.66.0" />
     <PackageReference Include="Microsoft.SemanticKernel.Agents.Runtime.InProcess" Version="1.66.0-preview"/>
+    <PackageReference Include="Microsoft.SemanticKernel.Agents.AzureAI" Version="1.66.0-preview" />
+    <PackageReference Include="Microsoft.SemanticKernel.Agents.OpenAI" Version="1.66.0-preview" />
   </ItemGroup>
 </Project>
