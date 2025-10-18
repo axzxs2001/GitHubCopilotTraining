@@ -16,48 +16,43 @@ var kernel = Kernel.CreateBuilder()
            .AddAzureOpenAIChatCompletion(deploymentName, endpoint, key).Build();
 
 
-ChatCompletionAgent analystAgent =
+ChatCompletionAgent dataQuerierAgent =
          CreateAgent(
-             name: "Analyst",
+             name: "DataQuerier",
              instructions:
                 """
-                你是一名市场分析师。根据产品描述，识别以下内容：
-                -主要特征
-                -目标受众
-                -独特卖点
+                你是一名数据查询专家。根据用户要求，查询到准确的数据：
+                - 要求json格式返回
+                - 确保数据的完整性和准确性
                 """,
-             description: "一个能从产品描述中提取关键概念的智能代理（Agent）。",
+             description: "一个能从数据中提取关键信息的智能代理（Agent）。",
              kernel: kernel);
-ChatCompletionAgent writerAgent =
+ChatCompletionAgent charter =
     CreateAgent(
-        name: "copywriter",
+        name: "Charter",
         instructions:
                 """
-                你是一名市场文案撰写人。根据一段描述产品特征、目标受众和独特卖点的文字，撰写一段引人注目的营销文案（例如新闻简报中的一个版块）。
-                输出应简短（约150字），只输出一段完整的文案文本。
+                你是一名图形生成专家。根据提供的数据，生成清晰且专业的图表：
+                - 确保图表易于理解
+                - 使用适当的图表类型（如柱状图、折线图、饼图等）
+                - 图表应包含标题和标签                
                 """,
-        description: "一个根据提取出的关键概念撰写营销文案的智能代理。",
+        description: "一个根据数据生成专业图表的智能代理。",
         kernel: kernel);
-ChatCompletionAgent editorAgent =
+ChatCompletionAgent imageViewer =
     CreateAgent(
-        name: "editor",
+        name: "ImageShower",
         instructions:
                 """
-                你是一名编辑。根据提供的文案草稿，完成以下工作：
-                -纠正语法错误
-                -提高表达的清晰度
-                -确保语气一致
-                -调整格式
-                -打磨语言，使其更加精炼、专业
-                输出为一段完整的、优化后的文案文本。
+                你是一名图像展示专家。根据提供的图像url，调用工具显示                
                 """,
-        description: "一个对营销文案进行格式调整和校对的智能代理。",
+        description: "一个展示图像的智能代理。",
         kernel: kernel);
 
 
 var monitor = new OrchestrationMonitor();
 var orchestration =
-   new SequentialOrchestration(analystAgent, writerAgent, editorAgent)
+   new SequentialOrchestration(dataQuerierAgent, charter, imageViewer)
    {
        ResponseCallback = monitor.ResponseCallback,
        LoggerFactory = NullLoggerFactory.Instance,
