@@ -24,8 +24,11 @@ A2AHostAgent? shopHostAgent = CreateChatCompletionHostAgent(
             "您专门处理与商店进销存的相关的请求",
             invoicePlugins);
 
-app.MapA2A(shopHostAgent!.TaskManager!, "/");
 
+
+
+app.MapWellKnownAgentCard(shopHostAgent!.TaskManager, "/");
+app.MapA2A(shopHostAgent!.TaskManager!, "/");
 
 app.Run();
 
