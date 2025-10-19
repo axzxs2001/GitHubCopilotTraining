@@ -1,8 +1,7 @@
 
 
 public class InlineChatDemo
-{ 
-  
+{   
     public string HashString(string input)
     {
         using (var md5 = System.Security.Cryptography.MD5.Create())

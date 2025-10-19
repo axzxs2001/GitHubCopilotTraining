@@ -1,6 +1,6 @@
 ---
 description: 'GPT 4.1 作为一名顶级编程代理。'
-model: GPT-4.1
+model: MyGPT4.1 (azure)
 title: '4.1 暴走模式 (VS Code v1.102)'
 ---
 
