@@ -53,11 +53,8 @@ ChatCompletionAgent refundAgent =
 
 refundAgent.Kernel.Plugins.Add(KernelPluginFactory.CreateFromObject(new OrderRefundPlugin()));
 
-// Create a monitor to capturing agent responses (via ResponseCallback)
-// to display at the end of this sample. (optional)
-// NOTE: Create your own callback to capture responses in your application or service.
 OrchestrationMonitor monitor = new();
-// Define user responses for InteractiveCallback (since sample is not interactive)
+
 Queue<string> responses = new();
 string task = "我是一位需要订单帮助的客户";
 responses.Enqueue("我想查询我的订单状态");
@@ -67,7 +64,7 @@ responses.Enqueue("订单号321");
 responses.Enqueue("物品损坏");
 responses.Enqueue("不需要了，再见");
 
-// Define the orchestration
+
 var orchestration =
     new HandoffOrchestration(OrchestrationHandoffs
             .StartWith(triageAgent)
@@ -90,11 +87,10 @@ var orchestration =
         LoggerFactory = NullLoggerFactory.Instance,
     };
 
-// Start the runtime
+
 InProcessRuntime runtime = new();
 await runtime.StartAsync();
 
-// Run the orchestration
 Console.WriteLine($"\n# INPUT:\n{task}\n");
 
 while (responses.Count > 0)

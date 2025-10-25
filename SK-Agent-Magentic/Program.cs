@@ -56,7 +56,7 @@ Kernel managerKernel = CreateKernelWithAzureOpenAIChatCompletion(ManagerModel);
 
 var manager = new StandardMagenticManager(managerKernel.GetRequiredService<IChatCompletionService>(), new OpenAIPromptExecutionSettings())
 {
-    MaximumInvocationCount = 50  
+    MaximumInvocationCount = 50
 };
 
 var orchestration = new MagenticOrchestration(manager, researchAgent, writerAgent)
@@ -77,12 +77,13 @@ Console.WriteLine($"\n# 结果: {text}");
 
 await runtime.RunUntilIdleAsync();
 
-Console.WriteLine("\n\n编排历史");
-foreach (ChatMessageContent message in monitor.History)
-{
-    Console.WriteLine($"{message.Role}:{message.Content}");
-}
+// Console.WriteLine("\n\n编排历史");
+// foreach (ChatMessageContent message in monitor.History)
+// {
+//     Console.WriteLine($"{message.Role}:{message.Content}");
+// }
 
+Console.ReadLine();
 ChatCompletionAgent CreateAgent(string instructions, string? description = null, string? name = null, Kernel? kernel = null)
 {
     return
@@ -127,8 +128,10 @@ sealed class OrchestrationMonitor
 
     public ValueTask ResponseCallback(Microsoft.SemanticKernel.ChatMessageContent response)
     {
+        Console.WriteLine("-------------------------------");
         Console.WriteLine(response.Role + ":" + response.AuthorName);
         Console.WriteLine(response?.Content);
+        Console.WriteLine("-------------------------------");
         this.History.Add(response);
         return ValueTask.CompletedTask;
     }
