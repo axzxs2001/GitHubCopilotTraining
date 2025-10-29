@@ -34,6 +34,37 @@ app.MapPost("/chat", async (PromptMessage chatPrompt) =>
 })
 .WithName("chat");
 
+app.MapPost("/streamchat", async (HttpContext context, PromptMessage chatPrompt) =>
+{
+    context.Response.ContentType = "text/event-stream";
+    
+    var kernelBuilder = Kernel.CreateBuilder();
+    kernelBuilder.AddAzureOpenAIChatCompletion(
+        deploymentName: deploymentName,
+        endpoint: endpoint,
+        apiKey: key);
+    var kernel = kernelBuilder.Build();
+    
+    var chatHistory = new ChatHistory("你是一个乐于助人的助手。");
+    chatHistory.AddUserMessage(chatPrompt.Input);
+    
+    var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
+    
+    await foreach (var item in chatCompletionService.GetStreamingChatMessageContentsAsync(chatHistory))
+    {
+        if (!string.IsNullOrEmpty(item.Content))
+        {
+            await context.Response.WriteAsync($"data: {item.Content}\n\n");
+            await context.Response.Body.FlushAsync();
+        }
+    }
+    
+    await context.Response.WriteAsync("data: [DONE]\n\n");
+    await context.Response.Body.FlushAsync();
+})
+.WithName("streamchat");
+
+
 app.Run();
 public class PromptMessage
 {

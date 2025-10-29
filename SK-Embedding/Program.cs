@@ -58,7 +58,7 @@ static async Task OllamaEmbedding()
         {
             Console.WriteLine($"相似度：{item.Similarity:F4}，内容：{item.Document}");
         }
-        var chatHistory = new ChatHistory("你是一个乐于助人的助手。");
+        var chatHistory = new ChatHistory("你是一个乐于助人的助手。只回答用户提出的问题，不多嘴");
         chatHistory.AddUserMessage(chatPrompt);
         chatHistory.AddUserMessage("根据以下内容作答：" +
             string.Join("\n", list.Take(2).Select(x => x.Document)));
@@ -85,7 +85,6 @@ static async Task AzureEmbedding()
     IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
     kernelBuilder
     //.AddOllamaEmbeddingGenerator("qwen3-embedding:0.6b", new Uri("http://localhost:11434/"))
-
     .AddAzureOpenAITextEmbeddingGeneration(deploymentName: "text-embedding-ada-002", endpoint: endpoint, apiKey: key)
     .AddAzureOpenAIChatCompletion(
         deploymentName: deploymentName,
@@ -123,11 +122,11 @@ static async Task AzureEmbedding()
         Console.WriteLine("请输入您的问题：");
         var chatPrompt = Console.ReadLine() ?? string.Empty;
         var list = await QueryAsync(chatPrompt, embeddingGenerator, vectorStore);
-        foreach (var item in list.Take(3))
+        foreach (var item in list)
         {
             Console.WriteLine($"相似度：{item.Similarity:F4}，内容：{item.Document}");
         }
-        var chatHistory = new ChatHistory("你是一个乐于助人的助手。");
+        var chatHistory = new ChatHistory("你是一个乐于助人的助手。只回答用户提出的问题，不多嘴");
         chatHistory.AddUserMessage(chatPrompt);
         chatHistory.AddUserMessage("根据以下内容作答：" +
             string.Join("\n", list.Take(2).Select(x => x.Document)));

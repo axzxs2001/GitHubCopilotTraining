@@ -97,7 +97,7 @@ while (true)
 {
     Console.WriteLine("请输入你的需求：");
     string? input = "价格大于10块的水果有什么?";
-    Console.ReadLine();
+    //Console.ReadLine();
 
     OrchestrationResult<string> result = await orchestration.InvokeAsync(input, runtime);
 
@@ -109,110 +109,110 @@ while (true)
 
 public class ChartGenerator
 {
-    [KernelFunction]
-    [Description("生成图表图片")]
-    public async Task<string> GenerateChart([Description("图表描述")] string chartDescription)
-    {
-        var key = File.ReadAllText("C:\\gpt\\key.txt");
-        var builder = Kernel.CreateBuilder()
-                   .AddOpenAITextToImage(
-                       apiKey: key,
-                       modelId: "dall-e-3");
-
-        var kernel = builder.Build();
-        var service = kernel.GetRequiredService<ITextToImageService>();
-
-        var generatedImages = await service.GetImageContentsAsync(
-            new TextContent($"根据下面内容生成适全的图表：\n{chartDescription}"),
-            new OpenAITextToImageExecutionSettings { Size = (Width: 1792, Height: 1024) });
-
-        return generatedImages[0].Uri!.ToString();
-    }
-
-
     // [KernelFunction]
     // [Description("生成图表图片")]
-    // public async Task<string> GenerateChart([Description("生成图表的数据，只接收json格式的数据")] string chartJson)
+    // public async Task<string> GenerateChart([Description("图表描述")] string chartDescription)
     // {
-    //     var arr = File.ReadLines("C://gpt/azure_key.txt").ToArray();
-    //     var endpoint = arr[1];
-    //     var deploymentName = arr[0];
-    //     var key = arr[2];
+    //     var key = File.ReadAllText("C:\\gpt\\key.txt");
+    //     var builder = Kernel.CreateBuilder()
+    //                .AddOpenAITextToImage(
+    //                    apiKey: key,
+    //                    modelId: "dall-e-3");
 
-    //     var Client = OpenAIAssistantAgent.CreateAzureOpenAIClient(
-    //         new ApiKeyCredential(key), new Uri(endpoint));
+    //     var kernel = builder.Build();
+    //     var service = kernel.GetRequiredService<ITextToImageService>();
 
-    //     var AssistantClient = Client.GetAssistantClient();        
-    //     var assistant =
-    //         await AssistantClient.CreateAssistantAsync("gpt-4.1",
-    //            "ChartMaker",
-    //             instructions: "Create charts as requested without explanation.",
-    //                     enableCodeInterpreter: true);
-  
-    //     OpenAIAssistantAgent agent = new(assistant, AssistantClient);
-    //     AgentThread? agentThread = null;
-    //     try
-    //     {
-    //         var result = await InvokeAgentAsync($""" 
-    //         Display this data using a bar-chart (not stacked):
-    //         {chartJson}
-    //         """);
-    //         return "生成图表图片成功，图片路径：" + result;
-    //     }
-    //     finally
-    //     {
-    //         if (agentThread is not null)
-    //         {
-    //             await agentThread.DeleteAsync();
-    //         }
+    //     var generatedImages = await service.GetImageContentsAsync(
+    //         new TextContent($"根据下面内容生成适全的图表：\n{chartDescription}"),
+    //         new OpenAITextToImageExecutionSettings { Size = (Width: 1792, Height: 1024) });
 
-    //         await AssistantClient.DeleteAssistantAsync(agent.Id);
-    //     }
-
-    //     async Task<string> InvokeAgentAsync(string input)
-    //     {
-    //         ChatMessageContent message = new(AuthorRole.User, input);
-    //         await foreach (AgentResponseItem<ChatMessageContent> response in agent.InvokeAsync(message))
-    //         {
-    //             var imagePath = await DownloadResponseImageAsync(response);
-    //             if (!string.IsNullOrEmpty(imagePath))
-    //             {
-    //                 return imagePath;
-    //             }
-    //             agentThread = response.Thread;
-    //         }
-    //         return string.Empty;
-    //     }
-    //     async Task<string> DownloadResponseImageAsync(ChatMessageContent message)
-    //     {
-    //         var fileClient = Client.GetOpenAIFileClient();
-    //         foreach (KernelContent item in message.Items)
-    //         {
-    //             if (item is FileReferenceContent fileReference)
-    //             {
-    //                 var imagePath = await DownloadFileContentAsync(fileClient, fileReference.FileId);
-    //                 if (!string.IsNullOrEmpty(imagePath))
-    //                 {
-    //                     return imagePath;
-    //                 }
-    //             }
-    //         }
-    //         return string.Empty;
-    //     }
-    //     async Task<string> DownloadFileContentAsync(OpenAIFileClient fileClient, string fileId)
-    //     {
-    //         OpenAIFile fileInfo = fileClient.GetFile(fileId);
-    //         if (fileInfo.Purpose == FilePurpose.AssistantsOutput)
-    //         {
-    //             string filePath = Path.Combine(Directory.GetCurrentDirectory(), Path.GetFileName(fileInfo.Filename));              
-    //             BinaryData content = await fileClient.DownloadFileAsync(fileId);
-    //             File.WriteAllBytes(filePath, content.ToArray());
-    //             Console.WriteLine($"图表已生成，保存在：{filePath}");
-    //             return filePath;
-    //         }
-    //         return string.Empty;
-    //     }
+    //     return generatedImages[0].Uri!.ToString();
     // }
+
+
+    [KernelFunction]
+    [Description("生成图表图片")]
+    public async Task<string> GenerateChart([Description("生成图表的数据，只接收json格式的数据")] string chartJson)
+    {
+        var arr = File.ReadLines("C://gpt/azure_key.txt").ToArray();
+        var endpoint = arr[1];
+        var deploymentName = arr[0];
+        var key = arr[2];
+
+        var Client = OpenAIAssistantAgent.CreateAzureOpenAIClient(
+            new ApiKeyCredential(key), new Uri(endpoint));
+
+        var AssistantClient = Client.GetAssistantClient();        
+        var assistant =
+            await AssistantClient.CreateAssistantAsync("gpt-4.1",
+               "ChartMaker",
+                instructions: "Create charts as requested without explanation.",
+                        enableCodeInterpreter: true);
+  
+        OpenAIAssistantAgent agent = new(assistant, AssistantClient);
+        AgentThread? agentThread = null;
+        try
+        {
+            var result = await InvokeAgentAsync($""" 
+            Display this data using a bar-chart (not stacked):
+            {chartJson}
+            """);
+            return "生成图表图片成功，图片路径：" + result;
+        }
+        finally
+        {
+            if (agentThread is not null)
+            {
+                await agentThread.DeleteAsync();
+            }
+
+            await AssistantClient.DeleteAssistantAsync(agent.Id);
+        }
+
+        async Task<string> InvokeAgentAsync(string input)
+        {
+            ChatMessageContent message = new(AuthorRole.User, input);
+            await foreach (AgentResponseItem<ChatMessageContent> response in agent.InvokeAsync(message))
+            {
+                var imagePath = await DownloadResponseImageAsync(response);
+                if (!string.IsNullOrEmpty(imagePath))
+                {
+                    return imagePath;
+                }
+                agentThread = response.Thread;
+            }
+            return string.Empty;
+        }
+        async Task<string> DownloadResponseImageAsync(ChatMessageContent message)
+        {
+            var fileClient = Client.GetOpenAIFileClient();
+            foreach (KernelContent item in message.Items)
+            {
+                if (item is FileReferenceContent fileReference)
+                {
+                    var imagePath = await DownloadFileContentAsync(fileClient, fileReference.FileId);
+                    if (!string.IsNullOrEmpty(imagePath))
+                    {
+                        return imagePath;
+                    }
+                }
+            }
+            return string.Empty;
+        }
+        async Task<string> DownloadFileContentAsync(OpenAIFileClient fileClient, string fileId)
+        {
+            OpenAIFile fileInfo = fileClient.GetFile(fileId);
+            if (fileInfo.Purpose == FilePurpose.AssistantsOutput)
+            {
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), Path.GetFileName(fileInfo.Filename));              
+                BinaryData content = await fileClient.DownloadFileAsync(fileId);
+                File.WriteAllBytes(filePath, content.ToArray());
+                Console.WriteLine($"图表已生成，保存在：{filePath}");
+                return filePath;
+            }
+            return string.Empty;
+        }
+    }
 }
 
 public class ImageShower

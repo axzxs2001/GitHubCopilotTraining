@@ -17,8 +17,8 @@ kernelBuilder.AddAzureOpenAIChatCompletion(
 var kernel = kernelBuilder.Build();
 
 
-await TimeFunction(kernel);
-//await OrderPluginFunctions(kernel);
+//await TimeFunction(kernel);
+await OrderPluginFunctions(kernel);
 
 
 static async Task TimeFunction(Kernel kernel)
